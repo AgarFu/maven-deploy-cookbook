@@ -56,7 +56,9 @@ def deploy(coordinates, repository, deploy_to)
     repo = Repository.new repo_url, username, password
 
     if not repo.artifact_updated?(coordinates, deploy_to)
-      if repo.get_artifact(coordinates, deploy_to)
+      if !repo.get_artifact(coordinates, deploy_to)
+        raise 'Failed to download artifact!!!'
+      else
         new_resource.updated_by_last_action(true)
         if new_resource.validate_checksum
           if not repo.artifact_updated?(coordinates, deploy_to)
